@@ -176,10 +176,10 @@ def area_generation(num_intervals, num_periods, num_intervals_periods, data_fold
     households = dict()
     area_demand_profile = [0] * num_intervals
 
-    household_folder = exp_folder + "households/"
-    path_h_folder = Path(household_folder)
-    if not path_h_folder.exists():
-        path_h_folder.mkdir(mode=0o777, parents=True, exist_ok=False)
+    # household_folder = exp_folder + "households/"
+    # path_h_folder = Path(household_folder)
+    # if not path_h_folder.exists():
+    #     path_h_folder.mkdir(mode=0o777, parents=True, exist_ok=False)
 
     for h in range(num_households):
         preferred_starts, earliest_starts, latest_ends, durations, demands, care_factors, \
@@ -221,9 +221,9 @@ def area_generation(num_intervals, num_periods, num_intervals_periods, data_fold
         area_demand_profile = [x + y for x, y in zip(household_profile, area_demand_profile)]
 
         # write this household data to a file
-        with open(household_folder + "household{}.json".format(household_key), 'w+') as f:
-            f.write(dumps(households[household_key], indent=4))
-        f.close()
+        # with open(household_folder + "household{}.json".format(household_key), 'w+') as f:
+        #     f.write(dumps(households[household_key], indent=1))
+        # f.close()
 
 
     area_demand_profile2 = [sum(x) for x in grouper(area_demand_profile, num_intervals_periods)]
