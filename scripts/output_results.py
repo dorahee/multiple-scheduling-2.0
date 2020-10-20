@@ -16,15 +16,20 @@ def write_batch_experiment_summary(exp_summary_dt, group_by_cols, dt_folder, tim
         plots = []
         result_type_name = key_selected.replace("_", " ").capitalize()
         for alg in set(sorted(df[k0_algorithm].values)):
-            alg_name = alg
-            alg_type = "scheduling"
+            alg_name = "FW-DSSM with "
+            result_name = result_type_name
             if "heuristic" in alg:
-                alg_name = "OGSA"
+                alg_name += "OGSA"
             elif "optimal" in alg:
-                alg_name = "Optimisation model"
-            if "fw" in alg:
-                alg_name += " with FW"
-                alg_type = "pricing"
+                alg_name += "CP model and data preprocessing"
+            if "time" in result_type_name:
+                if "fw" in alg:
+                    result_name = result_type_name + " of pricing"
+                else:
+                    result_name = result_type_name + " of scheduling"
+            else:
+                if "fw" not in alg:
+                    alg_name += " before FW"
 
             df_selected = df.loc[lambda df2: df[k0_algorithm] == alg, lambda df2: [k0_households_no, key_selected]]
             df_selected = df_selected.set_index(k0_households_no)
@@ -37,7 +42,7 @@ def write_batch_experiment_summary(exp_summary_dt, group_by_cols, dt_folder, tim
                 y_label = key_selected.replace("_", " ").capitalize()
             p_line = df_selected.plot_bokeh(
                 kind="line",
-                title="{} of {}, {}" .format(result_type_name, alg_type, alg_name),
+                title="{}, {}" .format(result_name, alg_name),
                 xlabel="Number of Households",
                 ylabel=y_label,
                 show_figure=False,
@@ -130,9 +135,9 @@ def draw_graphs(df_summary, df_demands_dt, df_prices_dt, df_others_dt, exp_folde
     for alg in df_demands_dt:
         alg_name = alg
         if "heuristic" in alg:
-            alg_name = "OGSA and FW"
+            alg_name = "FW-DDSM with OGSA"
         elif "optimal" in alg:
-            alg_name = "Optimisation model and FW"
+            alg_name = "FW-DDSM with CP model and dadta preprocessing"
         if 'fw' in alg:
             df_cost = df_others_dt[alg].T[k0_cost].div(100)
             p_line_cost = df_cost.plot_bokeh(

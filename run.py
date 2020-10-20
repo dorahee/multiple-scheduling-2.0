@@ -6,8 +6,8 @@ from datetime import date, datetime
 repeat_num = 1
 # household_nums = [2000, 4000, 6000, 8000, 10000]
 # household_nums = [20, 40, 60, 80, 100]
-# household_nums = household_nums.reverse()
 household_nums = [10]
+penalty_weights = [0, 1, 10, 100, 1000]
 new_data = True
 # new_data = False
 type_cost_function = "piece-wise"
@@ -19,12 +19,12 @@ algorithms_labels = dict()
 # algorithms_labels[k1_optimal][k2_pricing] = "{}_fw".format(k1_optimal)
 algorithms_labels[k1_heuristic] = dict()
 algorithms_labels[k1_heuristic][k2_scheduling] = k1_heuristic
-algorithms_labels[k1_heuristic][k2_pricing] = "{}_fw".format(k1_heuristic)
+algorithms_labels[k1_heuristic][k2_pricing] = f"{k1_heuristic}_fw"
 
 this_date = str(date.today())
 this_time = str(datetime.now().time().strftime("%H-%M-%S"))
 date_folder = result_folder + "{}/".format(this_date)
-date_time_folder = date_folder + "{}/".format(this_time)
+date_time_folder = date_folder + f"{this_time}/"
 
 experiment_summary_dict = dict()
 group_by_columns = [k0_households_no, k0_tasks_no, "algorithm", k0_penalty_weight, k0_cost_type]
@@ -33,8 +33,7 @@ group_by_columns = [k0_households_no, k0_tasks_no, "algorithm", k0_penalty_weigh
 def run():
     for n in household_nums:
         for r in range(repeat_num):
-            date_time_experiment_folder = date_time_folder \
-                                          + "h{0}-t{1}-w{2}-r{3}/".format(n, no_tasks_min, care_f_weight, r)
+            date_time_experiment_folder = date_time_folder + f"h{n}-t{no_tasks_min}-w{care_f_weight}-r{r}/"
 
             experiment_summary = experiment(n, no_tasks_min, no_tasks_min + 2, new_data, type_cost_function,
                                             algorithms_labels, date_time_experiment_folder)
