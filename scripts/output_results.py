@@ -81,7 +81,6 @@ def write_batch_experiment_summary(exp_summary_dt, group_by_cols, dt_folder, tim
     experiment_overview_pd = experiment_summary_pd.groupby(group_by_cols).mean()
     experiment_overview_pd.to_csv(dt_folder + "{}_overview.csv".format(time))
 
-
     generate_graphs(k0_households_no, "Number of households")
     generate_graphs(k0_penalty_weight, "Inconvenience cost weight")
 
