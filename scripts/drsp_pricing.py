@@ -58,7 +58,8 @@ def pricing_step_size(pricing_table, demand_profile_pre, demand_profile_new, pen
             else:
                 dd = dn - dp
                 dl = find_ge(d_levels, dp) + 0.01 if dd > 0 else find_le(d_levels, dp) - 0.01
-                step = ceil((dl - dp) / dd * 1000) / 1000
+                step = (dl - dp) / dd
+                # step = ceil(step * 1000) / 1000
                 step = max(step, min_step_size)
                 # print(step)
             step_profile.append(step)

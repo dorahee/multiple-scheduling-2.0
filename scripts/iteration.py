@@ -90,6 +90,8 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
                 obj_area += obj_household
                 penalty_area += penalty_household
                 time_scheduling_iteration += time_household
+            print("All households scheduled.")
+
 
         # 2.2 - save the rescheduled results
         demands = [sum(x) for x in grouper(demands_area_scheduling, no_intervals_periods)]

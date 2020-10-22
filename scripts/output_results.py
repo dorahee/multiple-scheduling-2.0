@@ -11,7 +11,7 @@ from bokeh.models import ColumnDataSource, NumeralTickFormatter
 
 def write_batch_experiment_summary(exp_summary_dt, group_by_cols, dt_folder, time):
 
-    def draw_graph(df, key_selected):
+    def draw_graph(df, key_selected, x_axis_key, x_label):
 
         plots = []
         result_type_name = key_selected.replace("_", " ").capitalize()
@@ -31,8 +31,8 @@ def write_batch_experiment_summary(exp_summary_dt, group_by_cols, dt_folder, tim
                 if "fw" not in alg:
                     alg_name += " before FW"
 
-            df_selected = df.loc[lambda df2: df[k0_algorithm] == alg, lambda df2: [k0_households_no, key_selected]]
-            df_selected = df_selected.set_index(k0_households_no)
+            df_selected = df.loc[lambda df2: df[k0_algorithm] == alg, lambda df2: [x_axis_key, key_selected]]
+            df_selected = df_selected.set_index(x_axis_key)
             y_label = ""
             if "time" in key_selected:
                 y_label = "Run time (seconds)"
@@ -43,40 +43,47 @@ def write_batch_experiment_summary(exp_summary_dt, group_by_cols, dt_folder, tim
             p_line = df_selected.plot_bokeh(
                 kind="line",
                 title="{}, {}" .format(result_name, alg_name),
-                xlabel="Number of Households",
+                xlabel=x_label,
                 ylabel=y_label,
                 show_figure=False,
                 sizing_mode="scale_width",
             )
             if "reduction" in key_selected:
                 p_line.yaxis.formatter = NumeralTickFormatter(format='0 %')
-            p_line.legend.location = "top_left"
+            p_line.legend.location = "bottom_right"
             p_line.y_range.start = 0
             plots.append(p_line)
 
-        pandas_bokeh.output_file("{}{}.html".format(dt_folder, result_type_name))
+        pandas_bokeh.output_file(f"{dt_folder}{result_type_name}_{x_label.lower().split()[-1]}.html")
         grid = pandas_bokeh.plot_grid(plots, ncols=2, show_plot=False)
         pandas_bokeh.save(grid)
 
+    def generate_graphs(x_axis_key, x_axis_name):
+        df_runtime = experiment_overview_pd.reset_index()[[x_axis_key, k0_algorithm, k1_time_average]]
+        draw_graph(df_runtime, k1_time_average, x_axis_key, x_axis_name)
+        df_iterations = experiment_overview_pd.reset_index()[[x_axis_key, k0_algorithm, k0_iteration_no]]
+        draw_graph(df_iterations, k0_iteration_no, x_axis_key, x_axis_name)
+        df_iterations = experiment_overview_pd.reset_index()[
+            [x_axis_key, k0_algorithm, k0_demand_max + " reduction"]]
+        draw_graph(df_iterations, k0_demand_max + " reduction", x_axis_key, x_axis_name)
+        df_iterations = experiment_overview_pd.reset_index()[[x_axis_key, k0_algorithm, k0_par + " reduction"]]
+        draw_graph(df_iterations, k0_par + " reduction", x_axis_key, x_axis_name)
+        df_iterations = experiment_overview_pd.reset_index()[[x_axis_key, k0_algorithm, k0_cost + " reduction"]]
+        draw_graph(df_iterations, k0_cost + " reduction", x_axis_key, x_axis_name)
+
     experiment_summary_pd = pd.DataFrame.from_dict(exp_summary_dt, orient='index')
-    experiment_summary_pd.index.names = ["repeat", "drop", k0_algorithm]
+    experiment_summary_pd.index.names = ["repeat", "drop1", "drop2", k0_algorithm]
     experiment_summary_pd = experiment_summary_pd.reset_index()
-    experiment_summary_pd = experiment_summary_pd.drop(columns=["drop"])
+    experiment_summary_pd = experiment_summary_pd.drop(columns=["drop1"])
+    experiment_summary_pd = experiment_summary_pd.drop(columns=["drop2"])
     experiment_summary_pd.to_csv(dt_folder + "{}_summary.csv".format(time))
 
     experiment_overview_pd = experiment_summary_pd.groupby(group_by_cols).mean()
     experiment_overview_pd.to_csv(dt_folder + "{}_overview.csv".format(time))
 
-    df_runtime = experiment_overview_pd.reset_index()[[k0_households_no, k0_algorithm, k1_time_average]]
-    draw_graph(df_runtime, k1_time_average)
-    df_iterations = experiment_overview_pd.reset_index()[[k0_households_no, k0_algorithm, k0_iteration_no]]
-    draw_graph(df_iterations, k0_iteration_no)
-    df_iterations = experiment_overview_pd.reset_index()[[k0_households_no, k0_algorithm, k0_demand_max+ " reduction"]]
-    draw_graph(df_iterations, k0_demand_max+ " reduction")
-    df_iterations = experiment_overview_pd.reset_index()[[k0_households_no, k0_algorithm, k0_par+ " reduction"]]
-    draw_graph(df_iterations, k0_par+ " reduction")
-    df_iterations = experiment_overview_pd.reset_index()[[k0_households_no, k0_algorithm, k0_cost+ " reduction"]]
-    draw_graph(df_iterations, k0_cost+ " reduction")
+
+    generate_graphs(k0_households_no, "Number of households")
+    generate_graphs(k0_penalty_weight, "Inconvenience cost weight")
 
 
 def aggregate_results(area_dt, key_params):

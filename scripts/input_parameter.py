@@ -13,7 +13,7 @@ care_f_max = 10
 care_f_weight = 1
 
 # pricing related parameters
-pricing_table_weight = 1
+pricing_table_weight = 1.2
 # cost_function_type = "linear"
 cost_function_type = "piece-wise"
 zero_digit = 2
@@ -67,7 +67,7 @@ k0_demand_table = "demand_levels"
 k0_time = "run_time"
 k1_time_scheduling = "rescheduling_time"
 k1_time_pricing = "pricing_time"
-k1_time_average = "average_run_time_per_iteration"
+k1_time_average = "average_run_time"
 
 # k1_interval = "interval"
 # k1_period = "period"
