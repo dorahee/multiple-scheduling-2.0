@@ -3,20 +3,20 @@ from scripts.output_results import write_batch_experiment_summary
 from datetime import date, datetime
 
 
-repeat_num = 1
+repeat_num = 5
 # household_nums = [2000, 4000, 6000, 8000, 10000]
 # household_nums = [20, 40, 60, 80, 100]
-household_nums = [10]
-penalty_weights = [0, 1, 10, 100, 1000]
-new_data = True
-# new_data = False
+household_nums = [5000]
+care_factor_weights = [0, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000]
+# new_data = True
+new_data = False
 type_cost_function = "piece-wise"
 # type_cost_function = "linear"
 
 algorithms_labels = dict()
-# algorithms_labels[k1_optimal] = dict()
-# algorithms_labels[k1_optimal][k2_scheduling] = k1_optimal
-# algorithms_labels[k1_optimal][k2_pricing] = "{}_fw".format(k1_optimal)
+algorithms_labels[k1_optimal] = dict()
+algorithms_labels[k1_optimal][k2_scheduling] = k1_optimal
+algorithms_labels[k1_optimal][k2_pricing] = "{}_fw".format(k1_optimal)
 algorithms_labels[k1_heuristic] = dict()
 algorithms_labels[k1_heuristic][k2_scheduling] = k1_heuristic
 algorithms_labels[k1_heuristic][k2_pricing] = f"{k1_heuristic}_fw"
@@ -31,18 +31,20 @@ group_by_columns = [k0_households_no, k0_tasks_no, "algorithm", k0_penalty_weigh
 
 
 def run():
-    for n in household_nums:
-        for r in range(repeat_num):
-            date_time_experiment_folder = date_time_folder + f"h{n}-t{no_tasks_min}-w{care_f_weight}-r{r}/"
+    for num_household in household_nums:
+        for cfw in care_factor_weights:
+            for r in range(repeat_num):
+                date_time_experiment_folder = date_time_folder + f"h{num_household}-t{no_tasks_min}-w{cfw}-r{r}/"
 
-            experiment_summary = experiment(n, no_tasks_min, no_tasks_min + 2, new_data, type_cost_function,
-                                            algorithms_labels, date_time_experiment_folder)
-            for algorithm in algorithms_labels.values():
-                for v in algorithm.values():
-                    experiment_summary_dict[r, n, v] = experiment_summary[v]
+                experiment_summary = experiment(num_household, no_tasks_min, no_tasks_min + 2, cfw,
+                                                new_data, type_cost_function,
+                                                algorithms_labels, date_time_experiment_folder)
+                for algorithm in algorithms_labels.values():
+                    for v in algorithm.values():
+                        experiment_summary_dict[r, num_household, cfw, v] = experiment_summary[v]
 
-            # write batch experiment summary
-            write_batch_experiment_summary(experiment_summary_dict, group_by_columns, date_time_folder, this_time)
+                # write batch experiment summary
+                write_batch_experiment_summary(experiment_summary_dict, group_by_columns, date_time_folder, this_time)
 
 
 if __name__ == '__main__':

@@ -3,18 +3,19 @@ from scripts.input_parameter import *
 from scripts.output_results import write_results
 
 
-def experiment(num_households, num_tasks_min, num_tasks_max, new_data, cost_type, algorithms_labels, experiment_folder):
+def experiment(num_households, num_tasks_min, num_tasks_max, cf_weight,
+               new_data, cost_type, algorithms_labels, experiment_folder):
 
     print("---------- Experiment Summary ----------")
-    str_note = "{0} households, min {1} tasks per household, {2} cost function, {3} care factor weight" \
-        .format(num_households, num_tasks_min, cost_type, care_f_weight)
+    str_note = f"{num_households} households, min {num_tasks_min} tasks per household, {cost_type} cost function, " \
+        f"{cf_weight} care factor weight"
     print(str_note)
 
     print("---------- Data Generation ----------")
     if new_data:
         households, area = area_generation(no_intervals, no_periods, no_intervals_periods,
                                            file_household_area_folder, experiment_folder,
-                                           num_households, num_tasks_min, num_tasks_max, care_f_weight, care_f_max,
+                                           num_households, num_tasks_min, num_tasks_max, cf_weight, care_f_max,
                                            max_demand_multiplier, file_probability, file_demand_list, algorithms_labels)
         print("Household data created...")
     else:
@@ -37,7 +38,7 @@ def experiment(num_households, num_tasks_min, num_tasks_max, new_data, cost_type
     print("---------- Results ----------")
     key_parameters = {k0_households_no: num_households,
                       k0_tasks_no: num_tasks_min,
-                      k0_penalty_weight: care_f_weight,
+                      k0_penalty_weight: cf_weight,
                       k0_cost_type: cost_function_type}
     print("Key parameters saved...")
 
