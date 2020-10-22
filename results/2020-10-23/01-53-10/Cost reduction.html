@@ -1,0 +1,85 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+    
+      <meta charset="utf-8">
+      <title>Bokeh Plot</title>
+      
+      
+        
+          
+        
+        
+          
+        <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.2.1.min.js" integrity="sha384-qkRvDQVAIfzsJo40iRBbxt6sttt0hv4lh74DG7OK4MCHv4C5oohXYoHUM5W11uqS" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            Bokeh.set_log_level("info");
+        </script>
+        
+      
+      
+    
+  </head>
+  
+  
+  <body>
+    
+      
+        
+          
+          
+            
+              <div class="bk-root" id="961c536a-d3d2-44fe-888a-ae2eab008f14" data-root-id="3179"></div>
+            
+          
+        
+      
+      
+        <script type="application/json" id="3300">
+          {"32b854b1-74f5-4859-bd18-7ad193103bea":{"roots":{"references":[{"attributes":{"axis_label":"Number of Households","formatter":{"id":"3149"},"ticker":{"id":"3158"}},"id":"3118","type":"LinearAxis"},{"attributes":{},"id":"3096","type":"UnionRenderers"},{"attributes":{},"id":"3097","type":"Selection"},{"attributes":{"bottom_units":"screen","fill_alpha":0.5,"fill_color":"lightgrey","left_units":"screen","level":"overlay","line_alpha":1.0,"line_color":"black","line_dash":[4,4],"line_width":2,"right_units":"screen","top_units":"screen"},"id":"3077","type":"BoxAnnotation"},{"attributes":{"below":[{"id":"3063"}],"center":[{"id":"3066"},{"id":"3070"},{"id":"3099"}],"left":[{"id":"3067"}],"output_backend":"webgl","plot_height":400,"renderers":[{"id":"3089"}],"sizing_mode":"scale_width","title":{"id":"3053"},"toolbar":{"id":"3078"},"toolbar_location":null,"x_range":{"id":"3055"},"x_scale":{"id":"3059"},"y_range":{"id":"3057"},"y_scale":{"id":"3061"}},"id":"3052","subtype":"Figure","type":"Plot"},{"attributes":{},"id":"3149","type":"BasicTickFormatter"},{"attributes":{"children":[[{"id":"3052"},0,0],[{"id":"3107"},0,1]]},"id":"3176","type":"GridBox"},{"attributes":{"toolbar":{"id":"3177"},"toolbar_location":"above"},"id":"3178","type":"ToolbarBox"},{"attributes":{"below":[{"id":"3118"}],"center":[{"id":"3121"},{"id":"3125"},{"id":"3154"}],"left":[{"id":"3122"}],"output_backend":"webgl","plot_height":400,"renderers":[{"id":"3144"}],"sizing_mode":"scale_width","title":{"id":"3108"},"toolbar":{"id":"3133"},"toolbar_location":null,"x_range":{"id":"3110"},"x_scale":{"id":"3114"},"y_range":{"id":"3112"},"y_scale":{"id":"3116"}},"id":"3107","subtype":"Figure","type":"Plot"},{"attributes":{"text":"Cost reduction, FW-DSSM with OGSA before FW"},"id":"3108","type":"Title"},{"attributes":{"ticks":[100]},"id":"3103","type":"FixedTicker"},{"attributes":{},"id":"3116","type":"LinearScale"},{"attributes":{},"id":"3110","type":"DataRange1d"},{"attributes":{"toolbars":[{"id":"3078"},{"id":"3133"}],"tools":[{"id":"3071"},{"id":"3072"},{"id":"3073"},{"id":"3074"},{"id":"3075"},{"id":"3076"},{"id":"3101"},{"id":"3126"},{"id":"3127"},{"id":"3128"},{"id":"3129"},{"id":"3130"},{"id":"3131"},{"id":"3156"}]},"id":"3177","type":"ProxyToolbar"},{"attributes":{"data_source":{"id":"3085"},"glyph":{"id":"3087"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"3088"},"selection_glyph":null,"view":{"id":"3090"}},"id":"3089","type":"GlyphRenderer"},{"attributes":{"callback":null,"mode":"vline","renderers":[{"id":"3089"}],"tooltips":[["Number of Households","@__x__values_original"],["cost reduction","@{cost reduction}"]]},"id":"3101","type":"HoverTool"},{"attributes":{"data":{"__x__values":[100],"__x__values_original":[100],"cost reduction":{"__ndarray__":"g8DKoUW2sz8=","dtype":"float64","order":"little","shape":[1]}},"selected":{"id":"3097"},"selection_policy":{"id":"3096"}},"id":"3085","type":"ColumnDataSource"},{"attributes":{},"id":"3061","type":"LinearScale"},{"attributes":{},"id":"3151","type":"UnionRenderers"},{"attributes":{},"id":"3114","type":"LinearScale"},{"attributes":{"bottom_units":"screen","fill_alpha":0.5,"fill_color":"lightgrey","left_units":"screen","level":"overlay","line_alpha":1.0,"line_color":"black","line_dash":[4,4],"line_width":2,"right_units":"screen","top_units":"screen"},"id":"3132","type":"BoxAnnotation"},{"attributes":{},"id":"3152","type":"Selection"},{"attributes":{"line_alpha":0.1,"line_color":"#1f77b4","line_width":2,"x":{"field":"__x__values"},"y":{"field":"cost reduction"}},"id":"3088","type":"Line"},{"attributes":{"start":0},"id":"3057","type":"DataRange1d"},{"attributes":{"line_color":"#1f77b4","line_width":2,"x":{"field":"__x__values"},"y":{"field":"cost reduction"}},"id":"3087","type":"Line"},{"attributes":{"source":{"id":"3085"}},"id":"3090","type":"CDSView"},{"attributes":{"click_policy":"hide","items":[{"id":"3100"}],"location":"top_left"},"id":"3099","type":"Legend"},{"attributes":{"text":"Cost reduction, FW-DSSM with OGSA"},"id":"3053","type":"Title"},{"attributes":{"format":"0 %"},"id":"3105","type":"NumeralTickFormatter"},{"attributes":{"label":{"value":" cost reduction"},"renderers":[{"id":"3089"}]},"id":"3100","type":"LegendItem"},{"attributes":{},"id":"3055","type":"DataRange1d"},{"attributes":{"axis_label":"Number of Households","formatter":{"id":"3094"},"ticker":{"id":"3103"}},"id":"3063","type":"LinearAxis"},{"attributes":{"axis":{"id":"3118"},"ticker":null},"id":"3121","type":"Grid"},{"attributes":{"source":{"id":"3140"}},"id":"3145","type":"CDSView"},{"attributes":{},"id":"3130","type":"ResetTool"},{"attributes":{"ticks":[100]},"id":"3158","type":"FixedTicker"},{"attributes":{},"id":"3072","type":"WheelZoomTool"},{"attributes":{},"id":"3059","type":"LinearScale"},{"attributes":{"axis":{"id":"3063"},"ticker":null},"id":"3066","type":"Grid"},{"attributes":{"axis_label":"Cost reduction","formatter":{"id":"3105"},"ticker":{"id":"3068"}},"id":"3067","type":"LinearAxis"},{"attributes":{"axis":{"id":"3067"},"dimension":1,"ticker":null},"id":"3070","type":"Grid"},{"attributes":{"data_source":{"id":"3140"},"glyph":{"id":"3142"},"hover_glyph":null,"muted_glyph":null,"nonselection_glyph":{"id":"3143"},"selection_glyph":null,"view":{"id":"3145"}},"id":"3144","type":"GlyphRenderer"},{"attributes":{},"id":"3068","type":"BasicTicker"},{"attributes":{"active_drag":"auto","active_inspect":"auto","active_multi":null,"active_scroll":{"id":"3072"},"active_tap":"auto","tools":[{"id":"3071"},{"id":"3072"},{"id":"3073"},{"id":"3074"},{"id":"3075"},{"id":"3076"},{"id":"3101"}]},"id":"3078","type":"Toolbar"},{"attributes":{"callback":null,"mode":"vline","renderers":[{"id":"3144"}],"tooltips":[["Number of Households","@__x__values_original"],["cost reduction","@{cost reduction}"]]},"id":"3156","type":"HoverTool"},{"attributes":{},"id":"3076","type":"HelpTool"},{"attributes":{},"id":"3094","type":"BasicTickFormatter"},{"attributes":{"data":{"__x__values":[100],"__x__values_original":[100],"cost reduction":{"__ndarray__":"/Knx0k1iUL8=","dtype":"float64","order":"little","shape":[1]}},"selected":{"id":"3152"},"selection_policy":{"id":"3151"}},"id":"3140","type":"ColumnDataSource"},{"attributes":{},"id":"3071","type":"PanTool"},{"attributes":{"overlay":{"id":"3077"}},"id":"3073","type":"BoxZoomTool"},{"attributes":{},"id":"3074","type":"SaveTool"},{"attributes":{},"id":"3075","type":"ResetTool"},{"attributes":{"line_alpha":0.1,"line_color":"#1f77b4","line_width":2,"x":{"field":"__x__values"},"y":{"field":"cost reduction"}},"id":"3143","type":"Line"},{"attributes":{"children":[{"id":"3178"},{"id":"3176"}]},"id":"3179","type":"Column"},{"attributes":{"line_color":"#1f77b4","line_width":2,"x":{"field":"__x__values"},"y":{"field":"cost reduction"}},"id":"3142","type":"Line"},{"attributes":{"axis":{"id":"3122"},"dimension":1,"ticker":null},"id":"3125","type":"Grid"},{"attributes":{},"id":"3126","type":"PanTool"},{"attributes":{"axis_label":"Cost reduction","formatter":{"id":"3160"},"ticker":{"id":"3123"}},"id":"3122","type":"LinearAxis"},{"attributes":{"click_policy":"hide","items":[{"id":"3155"}],"location":"top_left"},"id":"3154","type":"Legend"},{"attributes":{"start":0},"id":"3112","type":"DataRange1d"},{"attributes":{},"id":"3123","type":"BasicTicker"},{"attributes":{"label":{"value":" cost reduction"},"renderers":[{"id":"3144"}]},"id":"3155","type":"LegendItem"},{"attributes":{},"id":"3131","type":"HelpTool"},{"attributes":{"overlay":{"id":"3132"}},"id":"3128","type":"BoxZoomTool"},{"attributes":{"active_drag":"auto","active_inspect":"auto","active_multi":null,"active_scroll":{"id":"3127"},"active_tap":"auto","tools":[{"id":"3126"},{"id":"3127"},{"id":"3128"},{"id":"3129"},{"id":"3130"},{"id":"3131"},{"id":"3156"}]},"id":"3133","type":"Toolbar"},{"attributes":{},"id":"3129","type":"SaveTool"},{"attributes":{"format":"0 %"},"id":"3160","type":"NumeralTickFormatter"},{"attributes":{},"id":"3127","type":"WheelZoomTool"}],"root_ids":["3179"]},"title":"Bokeh Application","version":"2.2.1"}}
+        </script>
+        <script type="text/javascript">
+          (function() {
+            var fn = function() {
+              Bokeh.safely(function() {
+                (function(root) {
+                  function embed_document(root) {
+                    
+                  var docs_json = document.getElementById('3300').textContent;
+                  var render_items = [{"docid":"32b854b1-74f5-4859-bd18-7ad193103bea","root_ids":["3179"],"roots":{"3179":"961c536a-d3d2-44fe-888a-ae2eab008f14"}}];
+                  root.Bokeh.embed.embed_items(docs_json, render_items);
+                
+                  }
+                  if (root.Bokeh !== undefined) {
+                    embed_document(root);
+                  } else {
+                    var attempts = 0;
+                    var timer = setInterval(function(root) {
+                      if (root.Bokeh !== undefined) {
+                        clearInterval(timer);
+                        embed_document(root);
+                      } else {
+                        attempts++;
+                        if (attempts > 100) {
+                          clearInterval(timer);
+                          console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                        }
+                      }
+                    }, 10, root)
+                  }
+                })(window);
+              });
+            };
+            if (document.readyState != "loading") fn();
+            else document.addEventListener("DOMContentLoaded", fn);
+          })();
+        </script>
+    
+  </body>
+  
+</html>

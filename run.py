@@ -6,7 +6,7 @@ from datetime import date, datetime
 repeat_num = 1
 # household_nums = [2000, 4000, 6000, 8000, 10000]
 # household_nums = [20, 40, 60, 80, 100]
-household_nums = [10]
+household_nums = [100]
 penalty_weights = [0, 1, 10, 100, 1000]
 new_data = True
 # new_data = False

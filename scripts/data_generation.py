@@ -1,6 +1,5 @@
 import pickle
 from numpy import genfromtxt
-from csv import reader
 import random as r
 import numpy as np
 from numpy import sqrt, pi, random
@@ -8,6 +7,7 @@ import os
 from more_itertools import grouper
 from scripts.input_parameter import *
 from scripts.cfunctions import average
+from pandas import read_csv
 from pathlib import Path
 from json import dumps
 
@@ -21,22 +21,30 @@ def read_data(f_cp_pre, f_cp_ini, f_pricing_table, demand_level_scale, zero_digi
     solvers = dict()
     solvers["cp"] = "gecode"
 
-    pricing_table = dict()
-    pricing_table[k0_price_levels] = []
-    pricing_table[k0_demand_table] = dict()
-    with open(f_pricing_table, 'r') as csvfile:
-        csvreader = reader(csvfile, delimiter=',', quotechar='|')
+    csv_table = read_csv(f_pricing_table, header=None)
+    num_levels = len(csv_table.index)
+    csv_table.loc[num_levels + 1] = [csv_table[0].values[-1] * 10] + [demand_level_scale * 2 for _ in range(no_periods)]
 
-        for i_row, row in enumerate(csvreader):
-            # a row - the price and the demands of all periods at one level.
-            pricing_table_row = list(map(float, row))
-            price = pricing_table_row[0]
-            pricing_table[k0_price_levels].append(price)
-            # a col - the demand at one level of a period
-            for i_col, col in enumerate(pricing_table_row[1:]):
-                if i_col not in pricing_table[k0_demand_table]:
-                    pricing_table[k0_demand_table][i_col] = dict()
-                pricing_table[k0_demand_table][i_col][i_row] = round(col * demand_level_scale, -zero_digit)
+    pricing_table = dict()
+    pricing_table[k0_price_levels] = list(csv_table[0].values)
+    pricing_table[k0_demand_table] = dict()
+    pricing_table[k0_demand_table] = \
+        {period:
+            {level:
+                round(csv_table[period + 1].values[level] * demand_level_scale, -zero_digit)
+             for level in range(len(csv_table[period + 1]))}
+         for period in range(no_periods)}
+    # with open(f_pricing_table, 'r') as csvfile:
+    #     csvreader = reader(csvfile, delimiter=',', quotechar='|')
+    #
+    #     for i_row, row in enumerate(csvreader):
+    #         # a row - the price and the demands of all periods at one level.
+    #         pricing_table_row = list(map(float, row))
+    #         # a col - the demand at one level of a period
+    #         for i_col, col in enumerate(pricing_table_row[1:]):
+    #             if i_col not in pricing_table[k0_demand_table]:
+    #                 pricing_table[k0_demand_table][i_col] = dict()
+    #             pricing_table[k0_demand_table][i_col][i_row] = round(col * demand_level_scale, -zero_digit)
 
     return models, solvers, pricing_table
 
