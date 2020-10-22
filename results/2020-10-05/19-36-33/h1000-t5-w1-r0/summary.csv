@@ -1,0 +1,10 @@
+,heuristic,heuristic_fw
+no_tasks,5,5
+no_households,1000,1000
+penalty_weight,1,1
+cost_function_type,piece-wise,piece-wise
+max_demand reduction,-20.04,0.09
+PAR reduction,0.96,-0.11
+objective reduction,0.14,0.11
+cost reduction,0.15,0.11
+Average run_time,0.278,0.001
