@@ -249,8 +249,8 @@ def household_scheduling_subproblem \
     penalty = sum([abs(pst - ast) * cf_weight * cf for pst, ast, cf
                    in zip(preferred_starts, actual_starts, care_factors)])
 
-    if key % 100 == 0:
-        print("Household {} rescheduled by {}".format(key, k1_algorithm_scheduling))
+    if key % 100 == 0 or (key + 1) % 100 == 0:
+        print(f"Household {key} rescheduled by {k1_algorithm_scheduling}")
 
     # household[k0_starts] = actual_starts (moved to outer iteration)
 

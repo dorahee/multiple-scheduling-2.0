@@ -34,6 +34,7 @@ def pricing_step_size(pricing_table, demand_profile_pre, demand_profile_new, pen
     cost = cost_pre
     penalty = penalty_pre
     change_of_penalty = penalty_new - penalty_pre
+    print("change of penalty", change_of_penalty)
     price_day = prices_pre[:]
 
     # print("before fw", price_day)

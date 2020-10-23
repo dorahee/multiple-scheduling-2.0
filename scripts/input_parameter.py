@@ -13,7 +13,7 @@ care_f_max = 10
 care_f_weight = 1
 
 # pricing related parameters
-pricing_table_weight = 1.2
+pricing_table_weight = 1
 # cost_function_type = "linear"
 cost_function_type = "piece-wise"
 zero_digit = 2

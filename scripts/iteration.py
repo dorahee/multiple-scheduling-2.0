@@ -90,7 +90,7 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
                 obj_area += obj_household
                 penalty_area += penalty_household
                 time_scheduling_iteration += time_household
-            print("All households scheduled.")
+            print("All households scheduled.", penalty_area)
 
         # 2.2 - save the rescheduled results
         demands = [sum(x) for x in grouper(demands_area_scheduling, no_intervals_periods)]
@@ -103,6 +103,7 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
             = pricing_master_problem(itr, pricing_table, area, cost_type, key_scheduling, key_pricing_fw)
         time_pricing_iteration += time_fw
         print("step size at iteration {0}  = {1} computed by {2}".format(itr, step_fw, key_pricing_fw))
+        print(prices_fw)
 
         # 2.3 - save pricing results
         area = update_area_data(area, itr, key_scheduling, None, prices,
