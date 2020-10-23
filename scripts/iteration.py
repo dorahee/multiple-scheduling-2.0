@@ -67,10 +67,10 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
         # 2.1 - reschedule given the prices at iteration k - 1
         prices_fw_pre = area[key_pricing_fw][k0_prices][itr - 1]
 
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=13) as executor:
             reschedule_results = {
                 executor.submit(household_scheduling_subproblem, no_intervals, no_periods, no_intervals_periods,
-                                household, care_f_weight, care_f_max, prices_fw_pre,
+                                household, care_f_max, prices_fw_pre,
                                 model_file, model_type,
                                 solver_type, solver_choice, var_selection, val_choice,
                                 key_scheduling): household for household in households.values()}
@@ -91,7 +91,6 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
                 penalty_area += penalty_household
                 time_scheduling_iteration += time_household
             print("All households scheduled.")
-
 
         # 2.2 - save the rescheduled results
         demands = [sum(x) for x in grouper(demands_area_scheduling, no_intervals_periods)]

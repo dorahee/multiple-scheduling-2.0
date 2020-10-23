@@ -205,7 +205,7 @@ def household_optimal_solving \
 
 def household_scheduling_subproblem \
                 (num_intervals, num_periods, num_intervals_periods,
-                 household, cf_weight, cf_max, prices,
+                 household, cf_max, prices,
                  model_file, m_type, s_type, solver_choice, var_sel, val_cho, k1_algorithm_scheduling):
     # extract household data
     key = household[k0_household_key]
@@ -220,6 +220,7 @@ def household_scheduling_subproblem \
     succ_delays = household["succ_delays"]  # need to change this format when sending it to the solver
     no_precedences = household["no_prec"]
     max_demand = household["demand"]["limit"]
+    cf_weight = household["care_factor_weight"]
 
     if len(prices) == num_periods:
         prices = [int(p) for p in prices[:num_periods] for _ in range(num_intervals_periods)]
