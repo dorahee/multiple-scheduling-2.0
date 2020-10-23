@@ -70,7 +70,7 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
         with concurrent.futures.ProcessPoolExecutor() as executor:
             reschedule_results = {
                 executor.submit(household_scheduling_subproblem, no_intervals, no_periods, no_intervals_periods,
-                                household, care_f_weight, care_f_max, prices_fw_pre,
+                                household, care_f_max, prices_fw_pre,
                                 model_file, model_type,
                                 solver_type, solver_choice, var_selection, val_choice,
                                 key_scheduling): household for household in households.values()}

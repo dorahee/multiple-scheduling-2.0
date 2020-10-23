@@ -200,6 +200,7 @@ def area_generation(num_intervals, num_periods, num_intervals_periods, data_fold
         households[household_key]["precs"] = precedors
         households[household_key]["succ_delays"] = succ_delays
         households[household_key]["no_prec"] = num_precedences
+        households[household_key]["care_factor_weight"] = cf_weight
 
         households[household_key]["demand"] = dict()
         households[household_key]["demand"]["preferred"] = household_profile
