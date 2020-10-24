@@ -53,8 +53,9 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
     solver_choice = solvers[solver_type]
     model_file = models[solver_type][model_type]
     step_fw = 1
+    max_change_of_demand = 99
     # pool = mp.Pool(mp.cpu_count() - 1)
-    while step_fw > 0:
+    while step_fw > 0 and max_change_of_demand > 0.01:
 
         time_scheduling_iteration = 0
         time_pricing_iteration = 0
@@ -90,6 +91,7 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
                 obj_area += obj_household
                 penalty_area += penalty_household
                 time_scheduling_iteration += time_household
+
             print("All households scheduled.", penalty_area)
 
         # 2.2 - save the rescheduled results
@@ -114,6 +116,10 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
                                 step_fw, time_pricing_iteration)
 
         # 3 - next iteration
+        max_change_of_demand \
+            = max([abs(dn - dp) for dn, dp in
+                   zip(area[key_pricing_fw][k0_demand][itr], area[key_pricing_fw][k0_demand][itr - 1])])
         itr += 1
+
 
     return area, str_summary, itr - 1

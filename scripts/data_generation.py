@@ -23,7 +23,7 @@ def read_data(f_cp_pre, f_cp_ini, f_pricing_table, demand_level_scale, zero_digi
 
     csv_table = read_csv(f_pricing_table, header=None)
     num_levels = len(csv_table.index)
-    csv_table.loc[num_levels + 1] = [csv_table[0].values[-1] * 10] + [demand_level_scale * 1.1 for _ in range(no_periods)]
+    csv_table.loc[num_levels + 1] = [csv_table[0].values[-1] * 10] + [demand_level_scale * 1.2 for _ in range(no_periods)]
 
     pricing_table = dict()
     pricing_table[k0_price_levels] = list(csv_table[0].values)
@@ -63,12 +63,12 @@ def task_generation(num_intervals, num_periods, num_intervals_periods, mode_valu
     p_start = min(p_start, num_intervals - 1)
 
     # generation - earliest starting time
-    # e_start = r.randint(-duration + 1, p_start)
-    e_start = 0
+    e_start = r.randint(-duration + 1, p_start)
+    # e_start = 0
 
     # generation - latest finish time
-    # l_finish = r.randint(p_start + duration, num_intervals - 1 + duration)
-    l_finish = num_intervals - 1 + duration
+    l_finish = r.randint(p_start + duration, num_intervals - 1 + duration)
+    # l_finish = num_intervals - 1 + duration
 
     # generation - care factor
     # care_f = int(r.choice([i for i in range(1, cf_max + 1)]))

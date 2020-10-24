@@ -2,6 +2,7 @@ import timeit
 from minizinc import *
 import random as r
 from scripts.input_parameter import *
+from datetime import timedelta
 
 
 def data_preprocessing(num_intervals, demands, prices_day, earliest_starts, latest_ends, durations,
@@ -9,7 +10,7 @@ def data_preprocessing(num_intervals, demands, prices_day, earliest_starts, late
     max_demand = max(demands)
     max_duration = max(durations)
     run_costs = []
-    big_cost = (num_intervals * cf_max * max_demand + max_demand * max_duration)
+    big_cost = (num_intervals * max_demand * max(prices_day) + cf_max * num_intervals) * 2
     num_tasks = len(demands)
 
     for i in range(num_tasks):
@@ -184,7 +185,7 @@ def household_optimal_solving \
         ins["run_costs"] = run_costs
 
     # solve problem model
-    result = ins.solve()
+    result = ins.solve(timeout=timedelta(seconds=2))
 
     # process problem solution
     obj = result.objective
