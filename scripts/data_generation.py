@@ -63,16 +63,16 @@ def task_generation(num_intervals, num_periods, num_intervals_periods, mode_valu
     p_start = min(p_start, num_intervals - 1)
 
     # generation - earliest starting time
-    e_start = r.randint(-duration + 1, p_start)
-    # e_start = 0
+    e_start = 0
+    # e_start = r.randint(0, p_start)
 
     # generation - latest finish time
-    l_finish = r.randint(p_start + duration, num_intervals - 1 + duration)
-    # l_finish = num_intervals - 1 + duration
+    l_finish = num_intervals - 1 + duration
+    # l_finish = r.randint(p_start + duration, num_intervals - 1 + duration)
 
     # generation - care factor
-    # care_f = int(r.choice([i for i in range(1, cf_max + 1)]))
-    care_f = r.randint(1, cf_max + 1)
+    care_f = int(r.choice([i for i in range(1, cf_max + 1)]))
+    # care_f = r.randint(1, cf_max + 1)
 
     return demand, duration, p_start, e_start, l_finish, care_f
 

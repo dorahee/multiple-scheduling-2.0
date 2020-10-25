@@ -4,6 +4,7 @@ from scripts.drsp_pricing import *
 from scripts.input_parameter import *
 from scripts.cfunctions import *
 import concurrent.futures
+import multiprocessing as mp
 
 
 def update_data(r_dict, itr, k1_alg, d, k0):
@@ -54,7 +55,6 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
     model_file = models[solver_type][model_type]
     step_fw = 1
     max_change_of_demand = 99
-    # pool = mp.Pool(mp.cpu_count() - 1)
     while step_fw > 0 and max_change_of_demand > 0.01:
 
         time_scheduling_iteration = 0
@@ -67,32 +67,33 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
 
         # 2.1 - reschedule given the prices at iteration k - 1
         prices_fw_pre = area[key_pricing_fw][k0_prices][itr - 1]
+        print("Start scheduling households...")
+        pool = mp.Pool(mp.cpu_count() - 1)
+        reschedule_results = pool.starmap_async(household_scheduling_subproblem,
+                                          [(no_intervals, no_periods, no_intervals_periods,
+                                            household, care_f_max, prices_fw_pre,
+                                            model_file, model_type,
+                                            solver_type, solver_choice, var_selection, val_choice,
+                                            key_scheduling) for household in households.values()]).get()
+        pool.close()
+        pool.join()
 
-        with concurrent.futures.ProcessPoolExecutor(max_workers=13) as executor:
-            reschedule_results = {
-                executor.submit(household_scheduling_subproblem, no_intervals, no_periods, no_intervals_periods,
-                                household, care_f_max, prices_fw_pre,
-                                model_file, model_type,
-                                solver_type, solver_choice, var_selection, val_choice,
-                                key_scheduling): household for household in households.values()}
+        for result in reschedule_results:
+            key = result[k0_household_key]
+            starts_household = result[k0_starts]
+            demands_household = result[k0_demand]
+            obj_household = result[k0_obj]
+            penalty_household = result[k0_penalty]
+            time_household = result[k0_time]
 
-            for item in concurrent.futures.as_completed(reschedule_results):
-                result = item.result()
-                key = result[k0_household_key]
-                starts_household = result[k0_starts]
-                demands_household = result[k0_demand]
-                obj_household = result[k0_obj]
-                penalty_household = result[k0_penalty]
-                time_household = result[k0_time]
+            # 2.1.2 - update the area trackers: demand profile, total objective value, total penalty and run time
+            households[key][k0_starts][key_scheduling][itr] = starts_household
+            demands_area_scheduling = [x + y for x, y in zip(demands_household, demands_area_scheduling)]
+            obj_area += obj_household
+            penalty_area += penalty_household
+            time_scheduling_iteration += time_household
 
-                # 2.1.2 - update the area trackers: demand profile, total objective value, total penalty and run time
-                households[key][k0_starts][key_scheduling][itr] = starts_household
-                demands_area_scheduling = [x + y for x, y in zip(demands_household, demands_area_scheduling)]
-                obj_area += obj_household
-                penalty_area += penalty_household
-                time_scheduling_iteration += time_household
-
-            print("All households scheduled.", penalty_area)
+        print("All households scheduled.", penalty_area)
 
         # 2.2 - save the rescheduled results
         demands = [sum(x) for x in grouper(demands_area_scheduling, no_intervals_periods)]

@@ -10,7 +10,8 @@ def data_preprocessing(num_intervals, demands, prices_day, earliest_starts, late
     max_demand = max(demands)
     max_duration = max(durations)
     run_costs = []
-    big_cost = (num_intervals * max_demand * max(prices_day) + cf_max * num_intervals) * 2
+    # this big cost and big cost * number_tasks need to be smaller than the largest number that the solver can handle
+    big_cost = max_demand * max_duration * max(prices_day) + cf_weight * cf_max * num_intervals
     num_tasks = len(demands)
 
     for i in range(num_tasks):
@@ -33,18 +34,16 @@ def data_preprocessing(num_intervals, demands, prices_day, earliest_starts, late
                 rc = big_cost
             run_cost_task.append(int(rc))
         run_costs.append(run_cost_task)
-    return run_costs
+    return run_costs, big_cost
 
 
-def household_heuristic_solving(num_intervals, durations, demands, predecessors, successors,
+def household_heuristic_solving(num_intervals, big_cost, durations, demands, predecessors, successors,
                                 succ_delays, max_demand, run_costs, preferred_starts, latest_ends, cf_max):
     start_time = timeit.default_timer()
 
     actual_starts = []
     household_profile = [0] * num_intervals
     obj = 0
-    max_duration = max(durations)
-    big_cost = (num_intervals * cf_max * max_demand + max_demand * max_duration)
     num_tasks = len(demands)
 
     def retrieve_successors_or_precedents(list0, prec_or_succ_list1, succ_prec_list2):
@@ -186,6 +185,7 @@ def household_optimal_solving \
 
     # solve problem model
     result = ins.solve(timeout=timedelta(seconds=2))
+    # result = ins.solve()
 
     # process problem solution
     obj = result.objective
@@ -229,13 +229,13 @@ def household_scheduling_subproblem \
         prices = [int(p) for p in prices]
 
     # data preprocessing
-    run_costs = data_preprocessing(num_intervals, demands, prices,
+    run_costs, big_cost = data_preprocessing(num_intervals, demands, prices,
                                    earliest_starts, latest_ends, durations, preferred_starts,
                                    care_factors, cf_weight, cf_max)
 
     if "heuristic" in k1_algorithm_scheduling:
         actual_starts, demands_new, obj, runtime \
-            = household_heuristic_solving(num_intervals, durations, demands, precedents, successors,
+            = household_heuristic_solving(num_intervals, big_cost, durations, demands, precedents, successors,
                                           succ_delays, max_demand, run_costs, preferred_starts, latest_ends, cf_max)
 
     else:  # "optimal" in k1_algorithm
@@ -250,8 +250,8 @@ def household_scheduling_subproblem \
     penalty = sum([abs(pst - ast) * cf_weight * cf for pst, ast, cf
                    in zip(preferred_starts, actual_starts, care_factors)])
 
-    if key % 100 == 0 or (key + 1) % 100 == 0:
-        print(f"Household {key} rescheduled by {k1_algorithm_scheduling}")
+    # if key % 100 == 0 or (key + 1) % 100 == 0:
+    print(f"Household {key} rescheduled by {k1_algorithm_scheduling}")
 
     # household[k0_starts] = actual_starts (moved to outer iteration)
 
