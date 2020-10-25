@@ -251,7 +251,7 @@ def household_scheduling_subproblem \
                    in zip(preferred_starts, actual_starts, care_factors)])
 
     # if key % 100 == 0 or (key + 1) % 100 == 0:
-    print(f"Household {key} rescheduled by {k1_algorithm_scheduling}")
+    # print(f"Household {key} rescheduled by {k1_algorithm_scheduling}")
 
     # household[k0_starts] = actual_starts (moved to outer iteration)
 
