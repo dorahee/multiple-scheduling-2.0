@@ -68,7 +68,7 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
         # 2.1 - reschedule given the prices at iteration k - 1
         prices_fw_pre = area[key_pricing_fw][k0_prices][itr - 1]
         print("Start scheduling households...")
-        pool = mp.Pool(mp.cpu_count() - 1)
+        pool = mp.Pool()
         reschedule_results = pool.starmap_async(household_scheduling_subproblem,
                                           [(no_intervals, no_periods, no_intervals_periods,
                                             household, care_f_max, prices_fw_pre,
