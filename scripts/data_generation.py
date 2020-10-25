@@ -234,8 +234,7 @@ def area_generation(num_intervals, num_periods, num_intervals_periods, data_fold
         #     f.write(dumps(households[household_key], indent=1))
         # f.close()
 
-
-    area_demand_profile2 = [sum(x) for x in grouper(area_demand_profile, num_intervals_periods)]
+    area_demand_profile2 = [sum(x) for x in grouper(num_intervals_periods, area_demand_profile)]
     max_demand = max(area_demand_profile2)
     total_demand = sum(area_demand_profile2)
     par = round(max_demand / average(area_demand_profile2), 2)
