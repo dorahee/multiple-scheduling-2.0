@@ -19,7 +19,7 @@ def experiment(num_households, num_tasks_min, num_tasks_max, cf_weight,
                                            max_demand_multiplier, file_probability, file_demand_list, algorithms_labels)
         print("Household data created...")
     else:
-        households, area = area_read(file_household_area_folder)
+        households, area = area_read(file_household_area_folder, cf_weight)
         print("Household data read...")
 
     k1_temp = list(algorithms_labels)[0]

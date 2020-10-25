@@ -204,7 +204,7 @@ def area_generation(num_intervals, num_periods, num_intervals_periods, data_fold
         households[household_key]["ests"] = earliest_starts
         households[household_key]["lfts"] = latest_ends
         households[household_key]["psts"] = preferred_starts
-        households[household_key]["cfs"] = [cf * cf_weight for cf in care_factors]
+        households[household_key]["cfs"] = [cf for cf in care_factors]
         households[household_key]["precs"] = precedors
         households[household_key]["succ_delays"] = succ_delays
         households[household_key]["no_prec"] = num_precedences
@@ -270,13 +270,19 @@ def area_generation(num_intervals, num_periods, num_intervals_periods, data_fold
     return households, area
 
 
-def area_read(data_folder):
+def area_read(data_folder, cf_weight):
     with open(data_folder + "households" + '.pkl', 'rb') as f:
         households = pickle.load(f)
     f.close()
 
+    for household in households.values():
+        household["care_factor_weight"] = cf_weight
+
+
     with open(data_folder + "area" + '.pkl', 'rb') as f:
         area = pickle.load(f)
     f.close()
+
+
 
     return households, area

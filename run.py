@@ -4,13 +4,10 @@ from datetime import date, datetime
 
 
 repeat_num = 5
-# household_nums = [2000, 4000, 6000, 8000, 10000]
-# household_nums = [20, 40, 60, 80, 100]
 household_nums = [5000]
 care_factor_weights = [0, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000]
-# care_factor_weights = [0]
-new_data = True
-# new_data = False
+# new_data = True
+new_data = False
 type_cost_function = "piece-wise"
 # type_cost_function = "linear"
 
@@ -35,6 +32,7 @@ def run():
     for r in range(repeat_num):
         for num_household in household_nums:
             for cfw in care_factor_weights:
+                care_f_weight = cfw
 
                 if cfw == care_factor_weights[0]:
                     new_data = True
