@@ -3,6 +3,33 @@ from minizinc import *
 import random as r
 from scripts.input_parameter import *
 from datetime import timedelta
+from numpy import choice
+
+
+def household_scheduling_final(prob_dist, household, num_samples):
+
+    total_iterations = len(prob_dist)
+    sample_schedules = []
+    history_schedules = household
+    history_penalty = household
+    for _ in range(num_samples):
+        True
+        # selction_households = choice(total_itrs, no_houses, p=prob_dist)
+        # actual_penalties = [penalties_itr[selction_households[h]][h] for h in range(no_houses)]
+        # # print(actual_costs)
+        # actual_demands = [demands_itr[selction_households[h]][h] for h in range(no_houses)]
+        #
+        # actual_total_penalty = sum(actual_penalties)
+        # actual_total_demands = [sum([actual_demands[h][t] for h in range(no_houses)]) for t in range(no_intervals_day)]
+        # actual_total_demands_short = [sum([actual_total_demands[i + j] for j in range(interval)]) / interval
+        #                             for i in range(0, no_intervals_day, interval)]
+        # prices_short = PR.main(actual_total_demands_short, lookup_coeff)
+        # actual_total_cost = sum([p * d * 0.5 for p, d in zip(prices_short, actual_total_demands_short)])
+        # actual_max_demand = max(actual_total_demands_short)
+
+        # sample_schedules += ",".join(map(str, actual_total_demands_short)) + "\n"
+
+    return sample_schedules
 
 
 def data_preprocessing(num_intervals, demands, prices_day, earliest_starts, latest_ends, durations,
