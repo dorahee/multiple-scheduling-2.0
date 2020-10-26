@@ -3,8 +3,8 @@ from scripts.output_results import write_batch_experiment_summary
 from datetime import date, datetime
 
 
-repeat_num = 1
-household_nums = [50]
+repeat_num = 5
+household_nums = [5000]
 care_factor_weights = [0, 1, 5, 10, 50, 100, 500, 1000, 5000, 10000]
 # new_data = True
 new_data = False
