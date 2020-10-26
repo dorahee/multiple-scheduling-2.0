@@ -4,6 +4,20 @@ from time import time
 from math import ceil
 
 
+def pricing_probability_distribution(history_steps):
+    prob_dist = []
+
+    for alpha in history_steps:
+        if not prob_dist:
+            prob_dist.append(1 - alpha)
+            prob_dist.append(alpha)
+        else:
+            prob_dist = [p_d * (1 - alpha) for p_d in prob_dist]
+            prob_dist.append(alpha)
+
+    return prob_dist
+
+
 def pricing_cost(demand_profile, pricing_table, cost_function):
     price_day = []
     cost = 0
