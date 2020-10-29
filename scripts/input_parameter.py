@@ -49,6 +49,7 @@ k0_demand = "demands"
 k0_demand_max = "max_demand"
 k0_demand_total = "total_demand"
 k0_par = "PAR"
+k0_final = "final"
 
 # step size
 k0_step = "step_size"

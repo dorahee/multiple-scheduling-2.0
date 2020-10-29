@@ -3,33 +3,17 @@ from minizinc import *
 import random as r
 from scripts.input_parameter import *
 from datetime import timedelta
-from numpy import choice
+from numpy.random import choice
 
 
-def household_scheduling_final(prob_dist, household, num_samples):
+def household_scheduling_final(prob_dist, household, key_scheduling):
 
-    total_iterations = len(prob_dist)
-    sample_schedules = []
-    history_schedules = household
-    history_penalty = household
-    for _ in range(num_samples):
-        True
-        # selction_households = choice(total_itrs, no_houses, p=prob_dist)
-        # actual_penalties = [penalties_itr[selction_households[h]][h] for h in range(no_houses)]
-        # # print(actual_costs)
-        # actual_demands = [demands_itr[selction_households[h]][h] for h in range(no_houses)]
-        #
-        # actual_total_penalty = sum(actual_penalties)
-        # actual_total_demands = [sum([actual_demands[h][t] for h in range(no_houses)]) for t in range(no_intervals_day)]
-        # actual_total_demands_short = [sum([actual_total_demands[i + j] for j in range(interval)]) / interval
-        #                             for i in range(0, no_intervals_day, interval)]
-        # prices_short = PR.main(actual_total_demands_short, lookup_coeff)
-        # actual_total_cost = sum([p * d * 0.5 for p, d in zip(prices_short, actual_total_demands_short)])
-        # actual_max_demand = max(actual_total_demands_short)
+    chosen_iter = choice(len(prob_dist), size=1, p=prob_dist)[0]
+    # print(chosen_iter)
+    chosen_demands = household[k0_demand][key_scheduling][chosen_iter]
+    chosen_penalty = household[k0_penalty][key_scheduling][chosen_iter] * household["care_factor_weight"]
 
-        # sample_schedules += ",".join(map(str, actual_total_demands_short)) + "\n"
-
-    return sample_schedules
+    return chosen_demands, chosen_penalty
 
 
 def data_preprocessing(num_intervals, demands, prices_day, earliest_starts, latest_ends, durations,
@@ -237,7 +221,7 @@ def household_scheduling_subproblem \
                  model_file, m_type, s_type, solver_choice, var_sel, val_cho, k1_algorithm_scheduling):
     # extract household data
     key = household[k0_household_key]
-    demands = household["demands"]
+    demands = household["power"]
     durations = household["durs"]
     earliest_starts = household["ests"]
     latest_ends = household["lfts"]
@@ -247,7 +231,7 @@ def household_scheduling_subproblem \
     successors = list(household["precs"].keys())
     succ_delays = household["succ_delays"]  # need to change this format when sending it to the solver
     no_precedences = household["no_prec"]
-    max_demand = household["demand"]["limit"]
+    max_demand = household[k0_demand]["limit"]
     cf_weight = household["care_factor_weight"]
 
     if len(prices) == num_periods:
@@ -279,8 +263,6 @@ def household_scheduling_subproblem \
 
     # if key % 100 == 0 or (key + 1) % 100 == 0:
     # print(f"Household {key} rescheduled by {k1_algorithm_scheduling}")
-
-    # household[k0_starts] = actual_starts (moved to outer iteration)
 
     return {k0_household_key: key, k0_starts: actual_starts, k0_demand: demands_new, k0_obj: obj, k0_penalty: penalty,
             k0_time: round(runtime, 3)}

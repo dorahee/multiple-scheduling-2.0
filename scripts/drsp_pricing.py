@@ -74,7 +74,8 @@ def pricing_step_size(pricing_table, demand_profile_pre, demand_profile_new, pen
                 dl = find_ge(d_levels, dp) + 0.01 if dd > 0 else find_le(d_levels, dp) - 0.01
                 step = (dl - dp) / dd
                 step = ceil(step * 1000) / 1000
-                step = max(step, min_step_size)
+                step = step if step > min_step_size else 1
+                # step = max(step, min_step_size)
                 # print(step)
             step_profile.append(step)
 
@@ -107,32 +108,44 @@ def pricing_step_size(pricing_table, demand_profile_pre, demand_profile_new, pen
 
 def pricing_master_problem(iteration, pricing_table, area, cost_function, k1_algorithm_scheduling, k1_algorithm_fw):
 
-    # the new demand profile generated at the current iteration
-    demands_new = area[k1_algorithm_scheduling][k0_demand][iteration]
-    penalty_new = area[k1_algorithm_scheduling][k0_penalty][iteration]
+    if iteration >= 0:
 
-    # calculate the prices and the cost of the new demand profile
-    prices1, cost1 = pricing_cost(demands_new, pricing_table, cost_function)
+        # the new demand profile generated at the current iteration
+        demands_new = area[k1_algorithm_scheduling][k0_demand][iteration]
+        penalty_new = area[k1_algorithm_scheduling][k0_penalty][iteration]
 
-    t_begin = time()
-    if iteration > 0:
-        demands_fw_pre = area[k1_algorithm_fw][k0_demand][iteration - 1]
-        prices_fw_pre = area[k1_algorithm_fw][k0_prices][iteration - 1]
-        cost_fw_pre = area[k1_algorithm_fw][k0_cost][iteration - 1]
-        penalty_fw_pre = area[k1_algorithm_fw][k0_penalty][iteration - 1]
+        # calculate the prices and the cost of the new demand profile
+        prices1, cost1 = pricing_cost(demands_new, pricing_table, cost_function)
 
-        demands_fw1, step1, prices_fw1, cost_fw1, penalty_fw1 \
-            = pricing_step_size(pricing_table, demands_fw_pre, demands_new,
-                                penalty_fw_pre, penalty_new,
-                                cost_function_type, prices_fw_pre, cost_fw_pre)
+        t_begin = time()
+        if iteration > 0:
+            demands_fw_pre = area[k1_algorithm_fw][k0_demand][iteration - 1]
+            prices_fw_pre = area[k1_algorithm_fw][k0_prices][iteration - 1]
+            cost_fw_pre = area[k1_algorithm_fw][k0_cost][iteration - 1]
+            penalty_fw_pre = area[k1_algorithm_fw][k0_penalty][iteration - 1]
+
+            demands_fw1, step1, prices_fw1, cost_fw1, penalty_fw1 \
+                = pricing_step_size(pricing_table, demands_fw_pre, demands_new,
+                                    penalty_fw_pre, penalty_new,
+                                    cost_function_type, prices_fw_pre, cost_fw_pre)
+        else:
+            demands_fw1 = demands_new
+            prices_fw1 = prices1
+            cost_fw1 = cost1
+            penalty_fw1 = penalty_new
+            step1 = 1
+
+        time_fw = time() - t_begin
+
     else:
+        demands_new = area[k1_algorithm_scheduling][k0_final][0]
+        prices1, cost1 = pricing_cost(demands_new, pricing_table, cost_function)
         demands_fw1 = demands_new
         prices_fw1 = prices1
         cost_fw1 = cost1
-        penalty_fw1 = penalty_new
+        penalty_fw1 = 0
         step1 = 1
-
-    time_fw = time() - t_begin
+        time_fw = 0
 
     return prices1, cost1, demands_fw1, prices_fw1, cost_fw1, penalty_fw1, step1, time_fw
 

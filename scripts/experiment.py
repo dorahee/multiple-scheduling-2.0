@@ -4,7 +4,7 @@ from scripts.output_results import write_results
 
 
 def experiment(num_households, num_tasks_min, num_tasks_max, cf_weight,
-               new_data, cost_type, algorithms_labels, experiment_folder):
+               new_data, cost_type, algorithms_labels, experiment_folder, num_samples):
 
     print("---------- Experiment Summary ----------")
     str_note = f"{num_households} households, min {num_tasks_min} tasks per household, {cost_type} cost function, " \
@@ -34,6 +34,12 @@ def experiment(num_households, num_tasks_min, num_tasks_max, cf_weight,
             = iteration(area, households, pricing_table, cost_type, str_note, solvers, models, alg)
         print("---------- Iteration Done! ----------")
         print("Converged in {0} iteration".format(num_iterations))
+
+        print("---------- Actual Scheduling ----------")
+        chosen_total_demands, chosen_total_penatly, chosen_total_cost, chosen_obj \
+            = post_iteration(no_intervals, no_intervals_periods, area, households, pricing_table, cost_type, alg)
+        print(chosen_obj)
+        print(area[alg[k2_pricing]]['objective'])
 
     print("---------- Results ----------")
     key_parameters = {k0_households_no: num_households,

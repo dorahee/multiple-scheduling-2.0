@@ -8,7 +8,6 @@ from more_itertools import grouper
 from scripts.input_parameter import *
 from scripts.cfunctions import average
 from pandas import read_csv
-from pathlib import Path
 from json import dumps
 
 
@@ -199,7 +198,7 @@ def area_generation(num_intervals, num_periods, num_intervals_periods, data_fold
         households[household_key] = dict()
 
         households[household_key][k0_household_key] = household_key
-        households[household_key]["demands"] = demands
+        households[household_key]["power"] = demands
         households[household_key]["durs"] = durations
         households[household_key]["ests"] = earliest_starts
         households[household_key]["lfts"] = latest_ends
@@ -210,22 +209,26 @@ def area_generation(num_intervals, num_periods, num_intervals_periods, data_fold
         households[household_key]["no_prec"] = num_precedences
         households[household_key]["care_factor_weight"] = cf_weight
 
-        households[household_key]["demand"] = dict()
-        households[household_key]["demand"]["preferred"] = household_profile
-        households[household_key]["demand"]["max"] = max(household_profile)
-        households[household_key]["demand"]["limit"] = max(household_profile)
+        households[household_key][k0_demand] = dict()
+        households[household_key][k0_demand]["preferred"] = household_profile
+        households[household_key][k0_demand]["max"] = max(household_profile)
+        households[household_key][k0_demand]["limit"] = max(household_profile)
 
         households[household_key][k0_starts] = dict()
         households[household_key][k0_cost] = dict()
         households[household_key][k0_penalty] = dict()
         households[household_key][k0_obj] = dict()
+        households[household_key][k0_final] = dict()
 
         for k in algorithms_labels.keys():
             households[household_key][k0_starts][k] = dict()
-            # households[household_key][k0_starts][k1_optimal_scheduling] = dict()
+            households[household_key][k0_penalty][k] = dict()
+            households[household_key][k0_final][k] = dict()
+            households[household_key][k0_demand][k] = dict()
 
             households[household_key][k0_starts][k][0] = preferred_starts
-            # households[household_key][k0_starts][k1_optimal_scheduling][0] = preferred_starts
+            households[household_key][k0_penalty][k][0] = 0
+            households[household_key][k0_demand][k][0] = household_profile
 
         area_demand_profile = [x + y for x, y in zip(household_profile, area_demand_profile)]
 
@@ -247,6 +250,7 @@ def area_generation(num_intervals, num_periods, num_intervals_periods, data_fold
             area[v2][k0_demand_total] = dict()
             area[v2][k0_par] = dict()
             area[v2][k0_penalty] = dict()
+            area[v2][k0_final] = dict()
 
             area[v2][k0_demand][0] = area_demand_profile2
             area[v2][k0_demand_max][0] = max_demand

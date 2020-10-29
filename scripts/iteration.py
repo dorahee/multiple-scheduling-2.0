@@ -3,7 +3,6 @@ from scripts.household_scheduling import *
 from scripts.drsp_pricing import *
 from scripts.input_parameter import *
 from scripts.cfunctions import *
-import concurrent.futures
 import multiprocessing as mp
 
 
@@ -37,7 +36,7 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
     key_scheduling = algorithm_label[k2_scheduling]
     key_pricing_fw = algorithm_label[k2_pricing]
 
-    # 1.1 - the prices of the total preferred demand profile
+    # 1.1 - initial prices: the prices of the total preferred demand profile
     prices, cost, demands_fw, prices_fw, cost_fw, penalty_fw, step_fw, time_fw \
         = pricing_master_problem(0, pricing_table, area, cost_type, key_scheduling, key_pricing_fw)
     print("First day prices calculated...")
@@ -88,6 +87,8 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
 
             # 2.1.2 - update the area trackers: demand profile, total objective value, total penalty and run time
             households[key][k0_starts][key_scheduling][itr] = starts_household
+            households[key][k0_penalty][key_scheduling][itr] = penalty_household
+            households[key][k0_demand][key_scheduling][itr] = demands_household
             demands_area_scheduling = [x + y for x, y in zip(demands_household, demands_area_scheduling)]
             obj_area += obj_household
             penalty_area += penalty_household
@@ -122,5 +123,30 @@ def iteration(area, households, pricing_table, cost_type, str_summary, solvers, 
                    zip(area[key_pricing_fw][k0_demand][itr], area[key_pricing_fw][k0_demand][itr - 1])])
         itr += 1
 
-
     return area, str_summary, itr - 1
+
+
+def post_iteration(num_intervals, num_intervals_periods, area, households, pricing_table, cost_type, algorithm_label):
+    key_scheduling = algorithm_label[k2_scheduling]
+    key_pricing_fw = algorithm_label[k2_pricing]
+
+    # 3 - schedule
+    history_steps = list(area[key_pricing_fw][k0_step].values())
+    prob_distribution = pricing_probability_distribution(history_steps)[1:]
+
+    chosen_total_demands = [0] * num_intervals
+    chosen_total_penatly = 0
+    for household in households.values():
+        chosen_demands, chosen_penalty \
+            = household_scheduling_final(prob_distribution, household, key_scheduling)
+        chosen_total_demands = [x + y for x, y in zip(chosen_demands, chosen_total_demands)]
+        chosen_total_penatly += chosen_penalty
+
+    chosen_total_demands = [sum(x) for x in grouper(num_intervals_periods, chosen_total_demands)]
+    area[key_scheduling][k0_final][0] = chosen_total_demands
+
+    prices, chosen_total_cost, demands_fw, prices_fw, cost_fw, penalty_fw, step_fw, time_fw \
+        = pricing_master_problem(-1, pricing_table, area, cost_type, key_scheduling, key_pricing_fw)
+
+
+    return chosen_total_demands, chosen_total_penatly, chosen_total_cost, chosen_total_cost + chosen_total_penatly
